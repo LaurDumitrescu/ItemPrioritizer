@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ItemPrioritizer:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="ItemPrioritizer.jar">
+      <element id="module-output" name="ItemPrioritizer" />
+    </root>
+  </artifact>
+</component>
