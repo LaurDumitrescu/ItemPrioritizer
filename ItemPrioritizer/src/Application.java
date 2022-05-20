@@ -47,15 +47,11 @@ public class Application extends Frame {
 
         //Add button initialization and logic
         add = new Button("Add");
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                subjects.add(new Subject(tfSubject.getText(), Integer.parseInt(tfPriority.getText())));
-                noDups.add(new Subject(tfSubject.getText(), Integer.parseInt(tfPriority.getText())));
-                tfPriority.setText("");
-                tfSubject.setText("");
-            }
-
+        add.addActionListener(e -> {
+            subjects.add(new Subject(tfSubject.getText(), Integer.parseInt(tfPriority.getText())));
+            noDups.add(new Subject(tfSubject.getText(), Integer.parseInt(tfPriority.getText())));
+            tfPriority.setText("");
+            tfSubject.setText("");
         });
         add(add);
 
@@ -64,138 +60,114 @@ public class Application extends Frame {
 
         //Show button initialization and logic
         showAll = new Button("Show All");
-        showAll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<Subject> listAll = new ArrayList<>(noDups);
-                Collections.sort(listAll);
-                subjectsShow.setText("");
-                for(Subject s : listAll){
-                    subjectsShow.append(s.toString());
-                }
+        showAll.addActionListener(e -> {
+            ArrayList<Subject> listAll = new ArrayList<>(noDups);
+            Collections.sort(listAll);
+            subjectsShow.setText("");
+            for(Subject s : listAll){
+                subjectsShow.append(s.toString());
             }
         });
 
         //Clear button initialization and logic
         clear = new Button("Clear");
-        clear.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                subjectsShow.setText("");
-                tfSubject.setText("");
-                tfPriority.setText("");
-            }
+        clear.addActionListener(e -> {
+            subjectsShow.setText("");
+            tfSubject.setText("");
+            tfPriority.setText("");
         });
 
         //Change priority button initialization and logic
         changePriority = new Button("Change Priority");
-        changePriority.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        changePriority.addActionListener(e -> {
 
-                if(noDups.size() == 1) {
-                    for(Subject c : noDups){
-                        c.setPriority(Integer.parseInt(tfPriority.getText()));
-                    }
-                    tfSubject.setText("");
-                    tfPriority.setText("");
+            if(noDups.size() == 1) {
+                for(Subject c : noDups){
+                    c.setPriority(Integer.parseInt(tfPriority.getText()));
                 }
-                else {
-                    ArrayList<Subject> array = new ArrayList<>(noDups);
-                    Map<String, Integer> map = new HashMap<>();
-                    Set<Subject> newSet = new TreeSet<>();
-                    for (Subject s : array) {
-                        map.put(s.getName(), s.getPriority());
-                    }
-
-                    int priorityFromText = Integer.parseInt(tfPriority.getText());
-                    String textInput = tfSubject.getText();
-
-                    Map<Integer, String> map2 = new HashMap<>();
-                    for (Subject s : array) {
-                        map2.put(s.getPriority(), s.getName());
-                    }
-                    String textOld = map2.get(priorityFromText);
-                    int priorityOld = map.get(textInput);
-
-                    map.replace(textInput, priorityFromText);
-                    map.replace(textOld, priorityOld);
-
-                    for (Map.Entry<String, Integer> s : map.entrySet()) {
-                        newSet.add(new Subject(s.getKey(), s.getValue()));
-                    }
-
-                    noDups = newSet;
-                    tfSubject.setText("");
-                    tfPriority.setText("");
-
+            }
+            else {
+                ArrayList<Subject> array = new ArrayList<>(noDups);
+                Map<String, Integer> map = new HashMap<>();
+                Set<Subject> newSet = new TreeSet<>();
+                for (Subject s : array) {
+                    map.put(s.getName(), s.getPriority());
                 }
+
+                int priorityFromText = Integer.parseInt(tfPriority.getText());
+                String textInput = tfSubject.getText();
+
+                Map<Integer, String> map2 = new HashMap<>();
+                for (Subject s : array) {
+                    map2.put(s.getPriority(), s.getName());
+                }
+                String textOld = map2.get(priorityFromText);
+                int priorityOld = map.get(textInput);
+
+                map.replace(textInput, priorityFromText);
+                map.replace(textOld, priorityOld);
+
+                for (Map.Entry<String, Integer> s : map.entrySet()) {
+                    newSet.add(new Subject(s.getKey(), s.getValue()));
+                }
+
+                noDups = newSet;
 
             }
+            tfSubject.setText("");
+            tfPriority.setText("");
+
         });
 
         //DeleteAll button initialization and logic
         deleteAll = new Button("Delete All");
-        deleteAll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                noDups.clear();
-                subjectsShow.setText("");
+        deleteAll.addActionListener(e -> {
+            noDups.clear();
+            subjectsShow.setText("");
 
-            }
         });
 
         //StockData button initialization and logic
         stockData = new Button("Stock Data");
-        stockData.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FileOutputStream outputFile= null;
-                try {
-                    outputFile = new FileOutputStream("data.txt");
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                }
-
-                OutputStreamWriter outputStream=new OutputStreamWriter(outputFile);
-
-                PrintWriter pw=new PrintWriter(outputStream);
-
-                for(Subject s : noDups){
-                    pw.print(s.toString());
-                }
-
-                pw.flush();
-
-                ObjectOutputStream writer = null;
-                try {
-                    outputFile = new FileOutputStream("data2.txt");
-                    writer = new ObjectOutputStream(outputFile);
-                    writer.writeObject(noDups);
-                    writer.close();
-
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-
-
+        stockData.addActionListener(e -> {
+            FileOutputStream outputFile= null;
+            try {
+                outputFile = new FileOutputStream("data.txt");
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
             }
+
+            OutputStreamWriter outputStream=new OutputStreamWriter(outputFile);
+
+            PrintWriter pw=new PrintWriter(outputStream);
+
+            for(Subject s : noDups){
+                pw.print(s.toString());
+            }
+
+            pw.flush();
+
+            ObjectOutputStream writer;
+            try {
+                outputFile = new FileOutputStream("data2.txt");
+                writer = new ObjectOutputStream(outputFile);
+                writer.writeObject(noDups);
+                writer.close();
+
+            } catch (IOException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+
+
         });
 
         //RetriveData button initialization and logic
         retrieveData = new Button("Retrieve Data");
-        retrieveData.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    noDups = retrieveDataFromUser();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } catch (ClassNotFoundException classNotFoundException) {
-                    classNotFoundException.printStackTrace();
-                }
+        retrieveData.addActionListener(e -> {
+            try {
+                noDups = retrieveDataFromUser();
+            } catch (IOException | ClassNotFoundException ioException) {
+                ioException.printStackTrace();
             }
         });
 
